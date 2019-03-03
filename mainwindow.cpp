@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QToolBar>
 #include <QToolButton>
+
 /**
  * 快捷键出现冲突时，IDE无法检测，只有在运行时才知道。
  * @brief MainWindow::MainWindow
@@ -16,30 +17,45 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 方法1 失败
-    // 目前来看这个方法不行
-    // 遍历工具栏
-    QObjectList toolBarList = ui->mainToolBar->children();
-    QObjectList::Iterator it;
-    for (it = toolBarList.begin(); it != toolBarList.end(); ++it)
+    mActionNames.append("openAction");
+    mActionNames.append("newAction");
+    mActionNames.append("saveAction");
+    mActionNames.append("settingAction");
+
+    //遍历
+    for(int i = 0; i< mActionNames.size();++i)
     {
-        QToolButton* act = qobject_cast<QToolButton *>(*it);
-        if(act != NULL)
-        {
-            qDebug() << QString("objectName : %1").arg(act->objectName());
-            qDebug() << QString("text : %1").arg(act->text());
-            act->setDisabled(true);
-        }
+        QString tmp = mActionNames.at(i);
+        qDebug()<<QString("actionNames[%1] = %2").arg(i).arg(tmp);
+
+        //this->setEnableFunction(tmp);
+        this->setDisabledFunction(tmp);
     }
-
-    //QObjectList menuBarList = ui->menuBar->children();
-    //QObjectList::Iterator it;
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setOpenActionEnable(bool flag)
+{
+    ui->openAction->setEnabled(flag);
+}
+
+void MainWindow::setNewActionEnable(bool flag)
+{
+    ui->newAction->setEnabled(flag);
+}
+
+void MainWindow::setSaveActionEnable(bool flag)
+{
+    ui->saveAction->setEnabled(flag);
+}
+
+void MainWindow::setSettingActionEnable(bool flag)
+{
+    ui->settingAction->setEnabled(flag);
 }
 
 void MainWindow::on_openAction_triggered()
@@ -60,4 +76,50 @@ void MainWindow::on_saveAction_triggered()
 void MainWindow::on_settingAction_triggered()
 {
     QMessageBox::information(this, "INFO", ui->settingAction->text());
+}
+
+void MainWindow::setEnableFunction(const QString &functionName)
+{
+    bool flag = true;
+
+    // 这里注意使用objectName 而不是text
+    if(functionName == "openAction")
+    {
+        //this->setOpenActionEnable(flag);
+        // 直接用
+        ui->openAction->setEnabled(flag);
+    }
+    else if(functionName == "newAction")
+    {
+        this->setNewActionEnable(flag);
+    }
+    else if(functionName == "saveAction")
+    {
+        this->setSaveActionEnable(flag);
+    }
+    else if(functionName == "settingAction")
+    {
+        this->setSettingActionEnable(flag);
+    }
+}
+
+void MainWindow::setDisabledFunction(const QString &functionName)
+{
+    bool flag = false;
+    if(functionName == "openAction")
+    {
+        this->setOpenActionEnable(flag);
+    }
+    else if(functionName == "newAction")
+    {
+        this->setNewActionEnable(flag);
+    }
+    else if(functionName == "saveAction")
+    {
+        this->setSaveActionEnable(flag);
+    }
+    else if(functionName == "settingAction")
+    {
+        this->setSettingActionEnable(flag);
+    }
 }
