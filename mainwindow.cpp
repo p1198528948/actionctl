@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
         QString tmp = mActionNames.at(i);
         qDebug()<<QString("actionNames[%1] = %2").arg(i).arg(tmp);
 
-        //this->setEnableFunction(tmp);
-        this->setDisabledFunction(tmp);
+        this->setEnableFunction(tmp);
+        //this->setDisabledFunction(tmp);
     }
 }
 
